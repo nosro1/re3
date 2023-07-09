@@ -304,7 +304,7 @@ wchar selectedJoystickUnicode[128];
 int cachedButtonNum = -1;
 
 wchar* DetectJoystickDraw(bool* disabled, bool userHovering) {
-
+// TODO GLFW
 #if defined RW_GL3 && !defined LIBRW_SDL2
 	int numButtons;
 	int found = -1;

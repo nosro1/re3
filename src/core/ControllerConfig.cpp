@@ -46,6 +46,41 @@ void CControllerConfigManager::MakeControllerActionsBlank()
 #ifdef RW_GL3
 int MapIdToButtonId(int mapId) {
 	switch (mapId) {
+#ifdef LIBRW_SDL2
+		case SDL_CONTROLLER_BUTTON_A: // Cross
+			return 2;
+		case SDL_CONTROLLER_BUTTON_B: // Circle
+			return 1;
+		case SDL_CONTROLLER_BUTTON_X: // Square
+			return 3;
+		case SDL_CONTROLLER_BUTTON_Y: // Triangle
+			return 4;
+		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+			return 7;
+		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+			return 8;
+		case SDL_CONTROLLER_BUTTON_BACK:
+			return 9;
+		case SDL_CONTROLLER_BUTTON_START:
+			return 12;
+		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+			return 10;
+		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+			return 11;
+		case SDL_CONTROLLER_BUTTON_DPAD_UP:
+			return 13;
+		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+			return 14;
+		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+			return 15;
+		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+			return 16;
+		// SDL sends those as axes, so I added them here manually.
+		case 15: // Left trigger
+			return 5;
+		case 16: // Right trigger
+			return 6;
+#else
 		case GLFW_GAMEPAD_BUTTON_A: // Cross
 			return 2;
 		case GLFW_GAMEPAD_BUTTON_B: // Circle
@@ -79,6 +114,7 @@ int MapIdToButtonId(int mapId) {
 			return 5;
 		case 16: // Right trigger
 			return 6;
+#endif
 		default:
 			return 0;
 	}
@@ -2771,7 +2807,11 @@ void CControllerConfigManager::UpdateJoyButtonState(int32 padnumber)
 #elif defined RW_GL3
 	if (m_NewState.isGamepad) {
 		for (int32 i = 0; i < MAX_BUTTONS; i++) {
+#ifdef LIBRW_SDL2
+			if (i == SDL_CONTROLLER_BUTTON_GUIDE)
+#else
 			if (i == GLFW_GAMEPAD_BUTTON_GUIDE)
+#endif
 				continue;
 
 			m_aButtonStates[MapIdToButtonId(i)-1] = m_NewState.mappedButtons[i];

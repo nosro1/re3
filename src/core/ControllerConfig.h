@@ -104,12 +104,12 @@ class CControllerState;
 #define ACTIONNAME_LENGTH 40
 
 #ifdef RW_GL3
-struct GlfwJoyState {
+struct JoyState {
 	int8 id;
 	bool isGamepad;
 	uint8 numButtons;
-	uint8* buttons;
-	bool mappedButtons[17];
+	uint8 buttons[MAX_BUTTONS];
+	bool mappedButtons[MAX_BUTTONS];
 };
 #endif
 
@@ -130,11 +130,9 @@ public:
 
 	bool                  m_bFirstCapture;
 #if defined RW_GL3
-	GlfwJoyState           m_OldState;
-	GlfwJoyState           m_NewState;
+	JoyState              m_OldState, m_NewState;
 #else
-	DIJOYSTATE2           m_OldState;
-	DIJOYSTATE2           m_NewState;
+	DIJOYSTATE2           m_OldState, m_NewState;
 #endif
 	wchar                 m_aActionNames[MAX_CONTROLLERACTIONS][ACTIONNAME_LENGTH];
 	bool                  m_aButtonStates[MAX_BUTTONS];

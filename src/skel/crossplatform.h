@@ -1,5 +1,10 @@
 #include <time.h>
 #include <limits.h>
+#ifdef LIBRW_SDL2
+#include <SDL.h>
+#else
+#include <GLFW/glfw3.h>
+#endif
 
 // This is the common include for platform/renderer specific skeletons(glfw.cpp, win.cpp etc.) and using cross platform things (like Windows directories wrapper, platform specific global arrays etc.) 
 // Functions that's different on glfw and win but have same signature, should be located on platform.h.
@@ -59,7 +64,11 @@ int _caserename(const char *old_filename, const char *new_filename);
 #ifdef RW_GL3
 typedef struct
 {
+#ifdef LIBRW_SDL2
+	SDL_Window* window;
+#else
     GLFWwindow* window;
+#endif
     RwBool		fullScreen;
     RwV2d		lastMousePos;
     double      mouseWheel; // glfw doesn't cache it
@@ -160,6 +169,7 @@ void GetDateFormat(int, int, SYSTEMTIME*, int, char*, int);
 
 #ifdef __SWITCH__
 
+#ifndef LIBRW_SDL2
 // tweak glfw values for switch to match expected pc bindings
 #ifdef GLFW_GAMEPAD_BUTTON_A
     #undef GLFW_GAMEPAD_BUTTON_A
@@ -180,5 +190,6 @@ void GetDateFormat(int, int, SYSTEMTIME*, int, char*, int);
     #undef GLFW_GAMEPAD_BUTTON_Y
 #endif
 #define GLFW_GAMEPAD_BUTTON_Y 2
+#endif
 
 #endif

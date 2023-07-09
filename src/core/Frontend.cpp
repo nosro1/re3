@@ -803,7 +803,11 @@ CMenuManager::CentreMousePointer()
 		ClientToScreen(PSGLOBAL(window), &Point);
 		SetCursorPos(Point.x, Point.y);
 #elif defined RW_GL3
+#ifdef LIBRW_SDL2
+		SDL_WarpMouseInWindow(PSGLOBAL(window), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+#else
 		glfwSetCursorPos(PSGLOBAL(window), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+#endif
 #endif
 
 		PSGLOBAL(lastMousePos.x) = SCREEN_WIDTH / 2;
@@ -5140,11 +5144,21 @@ CMenuManager::ProcessButtonPresses(void)
 							ControlsManager.InitDefaultControlConfigJoyPad(devCaps.dwButtons);
 						}
 #else
+#ifdef LIBRW_SDL2
+						if (PSGLOBAL(joy1id) != -1 && SDL_IsGameController(PSGLOBAL(joy1id))) {
+							SDL_GameController* gamepad1 = SDL_GameControllerOpen(PSGLOBAL(joy1id));
+							SDL_Joystick* joy1 = SDL_GameControllerGetJoystick(gamepad1);	// TODO can I open joystick directly?
+							int count = SDL_JoystickNumButtons(joy1);
+							SDL_GameControllerClose(gamepad1);
+							ControlsManager.InitDefaultControlConfigJoyPad(count);
+						}
+#else
 						if (PSGLOBAL(joy1id) != -1 && glfwJoystickPresent(PSGLOBAL(joy1id))) {
 							int count;
 							glfwGetJoystickButtons(PSGLOBAL(joy1id), &count);
 							ControlsManager.InitDefaultControlConfigJoyPad(count);
 						}
+#endif
 #endif
 						m_ControlMethod = CONTROL_STANDARD;
 #ifdef FIX_BUGS
@@ -5650,7 +5664,11 @@ CMenuManager::ShutdownJustMenu()
 {
 	// In case we're windowed, keep mouse centered while in game. Done in main.cpp in other conditions.
 #if defined(RW_GL3) && defined(IMPROVED_VIDEOMODE)
+#ifdef LIBRW_SDL2
+	SDL_ShowCursor(SDL_DISABLE);
+#else
 	glfwSetInputMode(PSGLOBAL(window), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+#endif
 #endif
 	m_bMenuActive = false;
 	CTimer::EndUserPause();
@@ -5759,7 +5777,11 @@ CMenuManager::SwitchMenuOnAndOff()
 		
 		// In case we're windowed, keep mouse centered while in game. Done in main.cpp in other conditions.
 #if defined(RW_GL3) && defined(IMPROVED_VIDEOMODE)
+#ifdef LIBRW_SDL2
+		// TODO SDL2 does not distinguish between disabled and hidden SDL_ShowCursor(...);
+#else
 		glfwSetInputMode(PSGLOBAL(window), GLFW_CURSOR, m_bMenuActive && m_nPrefsWindowed ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_DISABLED);
+#endif
 #endif
 	}
 

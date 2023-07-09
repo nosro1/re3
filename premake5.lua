@@ -100,6 +100,10 @@ workspace "re3"
 			"linux-amd64-librw_gl3_glfw-oal",
 			"linux-arm-librw_gl3_glfw-oal",
 			"linux-arm64-librw_gl3_glfw-oal",
+			"linux-x86-librw_gl3_sdl2-oal",
+			"linux-amd64-librw_gl3_sdl2-oal",
+			"linux-arm-librw_gl3_sdl2-oal",
+			"linux-arm64-librw_gl3_sdl2-oal",
 		}
 
 	filter { "system:bsd" }
@@ -171,6 +175,16 @@ workspace "re3"
 			libdirs { path.join(Librw, "lib/%{getsys(cfg.system)}-%{getarch(cfg.architecture)}-gl3/%{cfg.buildcfg}") }
 		end
 
+	filter "platforms:*librw_gl3_sdl2*"
+		defines { "RW_GL3" }
+		defines { "RW_SDL2" }
+		defines { "LIBRW_GL3" }
+		defines { "LIBRW_SDL2" }
+		includedirs { "/usr/include/SDL2" }
+		if(not _OPTIONS["with-librw"]) then
+			libdirs { path.join(Librw, "lib/%{getsys(cfg.system)}-%{getarch(cfg.architecture)}-gl3/%{cfg.buildcfg}") }
+		end
+
 	filter "platforms:*x86-librw_gl3_glfw*"
 		includedirs { path.join(_OPTIONS["glfwdir32"], "include") }
 
@@ -233,6 +247,9 @@ project "librw"
 		
 	filter "platforms:*gl3_glfw*"
 		staticruntime "off"
+
+	filter "platforms:*gl3_sdl2*"
+		buildoptions { "-DLIBRW_SDL2" }
 
 	filter "platforms:*RW33*"
 		flags { "ExcludeFromBuild" }
@@ -454,6 +471,9 @@ project "re3"
 
 	filter "platforms:linux*gl3_glfw*"
 		links { "GL", "glfw" }
+
+	filter "platforms:linux*gl3_sdl2*"
+		links { "GL", "SDL2", "glfw" }
 
 	filter "platforms:bsd*gl3_glfw*"
 		links { "GL", "glfw", "sysinfo" }
