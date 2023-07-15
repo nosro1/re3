@@ -677,7 +677,8 @@ void _InputInitialiseJoys()
 		}
 	}
 
-	for (int i = 0; i <= SDL_NumJoysticks(); i++) {
+	// TODO SDL2 the part below seems unnecessary SDL2 (at least on Linux), remove in the future
+	/*for (int i = 0; i <= SDL_NumJoysticks(); i++) {
 		if (!IsThisJoystickBlacklisted(i)) {
 			if (PSGLOBAL(joy1id) == -1)
 				PSGLOBAL(joy1id) = i;
@@ -696,7 +697,7 @@ void _InputInitialiseJoys()
 		strncpy(gSelectedJoystickName, SDL_JoystickNameForIndex(PSGLOBAL(joy1id)), sizeof(gSelectedJoystickName));
 #endif
 		ControlsManager.InitDefaultControlConfigJoyPad(count);
-	}
+	}*/
 }
 
 long _InputInitialiseMouse()
@@ -1206,15 +1207,11 @@ void inputEventHandler() {
 			break;
 
 		case SDL_MOUSEMOTION: cursorCB(event.motion.x, event.motion.y); break;
-		//case SDL_MOUSEBUTTONDOWN: break;
-		//case SDL_MOUSEBUTTONUP: break;
 		case SDL_MOUSEWHEEL: scrollCB(event.wheel.x, event.wheel.y); break;
 
-		//case SDL_CONTROLLERBUTTONDOWN: break;
-		//case SDL_CONTROLLERBUTTONUP: break;
-		//case SDL_CONTROLLERAXISMOTION: break;
-		case SDL_CONTROLLERDEVICEADDED:	/* fall-through */
-		case SDL_CONTROLLERDEVICEREMOVED:
+		// note that SDL_CONTROLLERDEVICEADDED/REMOVED exists, but it did not work for me
+		case SDL_JOYDEVICEADDED:	/* fall-through */
+		case SDL_JOYDEVICEREMOVED:
 			joysChangeCB(event.cdevice.which, event.type);
 			break;
 
@@ -1776,9 +1773,6 @@ void CapturePad(RwInt32 padID)
 	int numButtons = SDL_JoystickNumButtons(joy);
 	int numAxes = SDL_JoystickNumAxes(joy);
 
-	if (numButtons <= 0 || numAxes <= 0)	// TODO SDL2 should not be necessary, fix gamepad detection
-		return;
-
 	if (ControlsManager.m_bFirstCapture == false) {
 		memcpy(&ControlsManager.m_OldState, &ControlsManager.m_NewState, sizeof(ControlsManager.m_NewState));
 	} else {
@@ -1869,7 +1863,7 @@ void CapturePad(RwInt32 padID)
 
 void joysChangeCB(int jid, int event)
 {
-	if (event == SDL_CONTROLLERDEVICEADDED && !IsThisJoystickBlacklisted(jid)) {
+	if (event == SDL_JOYDEVICEADDED && !IsThisJoystickBlacklisted(jid)) {
 		if (PSGLOBAL(joy1id) == -1) {
 			PSGLOBAL(joy1id) = jid;
 			SDL_Joystick* joy = SDL_JoystickOpen(jid);
@@ -1885,7 +1879,7 @@ void joysChangeCB(int jid, int event)
 		} else if (PSGLOBAL(joy2id) == -1)
 			PSGLOBAL(joy2id) = jid;
 
-	} else if (event == SDL_CONTROLLERDEVICEREMOVED) {
+	} else if (event == SDL_JOYDEVICEREMOVED) {
 		if (PSGLOBAL(joy1id) == jid) {
 			PSGLOBAL(joy1id) = -1;
 		} else if (PSGLOBAL(joy2id) == jid)

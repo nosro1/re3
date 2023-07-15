@@ -5144,13 +5144,13 @@ CMenuManager::ProcessButtonPresses(void)
 							ControlsManager.InitDefaultControlConfigJoyPad(devCaps.dwButtons);
 						}
 #else
-#ifdef LIBRW_SDL2
-						if (PSGLOBAL(joy1id) != -1 && SDL_IsGameController(PSGLOBAL(joy1id))) {
+#ifdef LIBRW_SDL2		// TODO SDL2 the part below seems unnecessary SDL2 (at least on Linux), remove in the future
+						/*if (PSGLOBAL(joy1id) != -1 && SDL_IsGameController(PSGLOBAL(joy1id))) {
 							SDL_Joystick* joy1 = SDL_JoystickOpen(PSGLOBAL(joy1id));
 							int count = SDL_JoystickNumButtons(joy1);
 							SDL_JoystickClose(joy1);
 							ControlsManager.InitDefaultControlConfigJoyPad(count);
-						}
+						}*/
 #else
 						if (PSGLOBAL(joy1id) != -1 && glfwJoystickPresent(PSGLOBAL(joy1id))) {
 							int count;
