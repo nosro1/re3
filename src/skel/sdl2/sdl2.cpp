@@ -689,10 +689,9 @@ void _InputInitialiseJoys()
 	}
 
 	if (PSGLOBAL(joy1id) != -1) {
-		SDL_GameController* gamepad1 = SDL_GameControllerOpen(PSGLOBAL(joy1id));
-		SDL_Joystick* joy1 = SDL_GameControllerGetJoystick(gamepad1);
+		SDL_Joystick* joy1 = SDL_JoystickOpen(PSGLOBAL(joy1id));
 		int count = SDL_JoystickNumButtons(joy1);
-		SDL_GameControllerClose(gamepad1);
+		SDL_JoystickClose(joy1);
 #ifdef DETECT_JOYSTICK_MENU
 		strncpy(gSelectedJoystickName, SDL_JoystickNameForIndex(PSGLOBAL(joy1id)), sizeof(gSelectedJoystickName));
 #endif
@@ -1801,7 +1800,7 @@ void CapturePad(RwInt32 padID)
 
 	ControlsManager.m_NewState.numButtons = numButtons;
 	ControlsManager.m_NewState.id = joyId;
-	ControlsManager.m_NewState.isGamepad = SDL_IsGameController(joyId);
+	ControlsManager.m_NewState.isGamepad = true; // SDL_IsGameController(joyId);
 
 	if (ControlsManager.m_NewState.isGamepad) {
 		// TRIGGERLEFT/RIGHT are in range 0..32767, which needs to be converted to -1 (released) .. 1 (pressed)
@@ -1873,12 +1872,12 @@ void joysChangeCB(int jid, int event)
 	if (event == SDL_CONTROLLERDEVICEADDED && !IsThisJoystickBlacklisted(jid)) {
 		if (PSGLOBAL(joy1id) == -1) {
 			PSGLOBAL(joy1id) = jid;
+			SDL_Joystick* joy = SDL_JoystickOpen(jid);
 #ifdef DETECT_JOYSTICK_MENU
-			strncpy(gSelectedJoystickName, SDL_JoystickName(jid), sizeof(gSelectedJoystickName));
+			strncpy(gSelectedJoystickName, SDL_JoystickNameForIndex(jid), sizeof(gSelectedJoystickName));
 #endif
 			// This is behind LOAD_INI_SETTINGS, because otherwise the Init call below will destroy/overwrite your bindings.
 #ifdef LOAD_INI_SETTINGS
-			SDL_Joystick* joy = SDL_JoystickOpen(jid);
 			int count = SDL_JoystickNumButtons(joy);
 			SDL_JoystickClose(joy);
 			ControlsManager.InitDefaultControlConfigJoyPad(count);

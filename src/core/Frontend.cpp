@@ -5146,10 +5146,9 @@ CMenuManager::ProcessButtonPresses(void)
 #else
 #ifdef LIBRW_SDL2
 						if (PSGLOBAL(joy1id) != -1 && SDL_IsGameController(PSGLOBAL(joy1id))) {
-							SDL_GameController* gamepad1 = SDL_GameControllerOpen(PSGLOBAL(joy1id));
-							SDL_Joystick* joy1 = SDL_GameControllerGetJoystick(gamepad1);	// TODO can I open joystick directly?
+							SDL_Joystick* joy1 = SDL_JoystickOpen(PSGLOBAL(joy1id));
 							int count = SDL_JoystickNumButtons(joy1);
-							SDL_GameControllerClose(gamepad1);
+							SDL_JoystickClose(joy1);
 							ControlsManager.InitDefaultControlConfigJoyPad(count);
 						}
 #else
