@@ -57,6 +57,9 @@ static RwInt32 bestWndMode = -1;
 
 static psGlobalType PsGlobal;
 
+static SDL_GameController* gamepad1 = nullptr;
+static SDL_GameController* gamepad2 = nullptr;
+
 
 #define PSGLOBAL(var) (((psGlobalType *)(RsGlobal.ps))->var)
 
@@ -1212,7 +1215,7 @@ void inputEventHandler() {
 		// note that SDL_CONTROLLERDEVICEADDED/REMOVED exists, but it did not work for me
 		case SDL_JOYDEVICEADDED:	/* fall-through */
 		case SDL_JOYDEVICEREMOVED:
-			joysChangeCB(event.cdevice.which, event.type);
+			joysChangeCB(event.jdevice.which, event.type);
 			break;
 
 		case SDL_WINDOWEVENT:
@@ -1756,20 +1759,20 @@ RwV2d rightStickPos;
 
 void CapturePad(RwInt32 padID)
 {
-	int joyId = -1;
+	static SDL_GameController* gamepad = nullptr;
 
 	if (padID == 0)
-		joyId = PSGLOBAL(joy1id);
+		gamepad = gamepad1;
 	else if(padID == 1)
-		joyId = PSGLOBAL(joy2id);
+		gamepad = gamepad2;
 	else
 		assert("invalid padID");
 
-	if (joyId == -1)
+	if (gamepad == nullptr)
 		return;
 
-	SDL_GameController* gamepad = SDL_GameControllerOpen(joyId);
 	SDL_Joystick* joy = SDL_GameControllerGetJoystick(gamepad);
+	int joyId = SDL_JoystickInstanceID(joy);
 	int numButtons = SDL_JoystickNumButtons(joy);
 	int numAxes = SDL_JoystickNumAxes(joy);
 
@@ -1857,33 +1860,46 @@ void CapturePad(RwInt32 padID)
 	}
 
 	_psHandleVibration();
-
-	SDL_GameControllerClose(gamepad);	// TODO ok? should the controller be opened and closed every time?
 }
 
 void joysChangeCB(int jid, int event)
 {
 	if (event == SDL_JOYDEVICEADDED && !IsThisJoystickBlacklisted(jid)) {
 		if (PSGLOBAL(joy1id) == -1) {
-			PSGLOBAL(joy1id) = jid;
-			SDL_Joystick* joy = SDL_JoystickOpen(jid);
+			assert(gamepad1 == nullptr);
+			gamepad1 = SDL_GameControllerOpen(jid);
+			assert(gamepad1 != nullptr);
 #ifdef DETECT_JOYSTICK_MENU
 			strncpy(gSelectedJoystickName, SDL_JoystickNameForIndex(jid), sizeof(gSelectedJoystickName));
 #endif
 			// This is behind LOAD_INI_SETTINGS, because otherwise the Init call below will destroy/overwrite your bindings.
 #ifdef LOAD_INI_SETTINGS
+			SDL_Joystick* joy = SDL_GameControllerGetJoystick(gamepad1);
 			int count = SDL_JoystickNumButtons(joy);
-			SDL_JoystickClose(joy);
 			ControlsManager.InitDefaultControlConfigJoyPad(count);
+			PSGLOBAL(joy1id) = SDL_JoystickInstanceID(joy);	// needed to get right ID for remove event
+			// Do not close the controller handle, it is done in the device remove handler (below)
 #endif
-		} else if (PSGLOBAL(joy2id) == -1)
-			PSGLOBAL(joy2id) = jid;
+		} else if (PSGLOBAL(joy2id) == -1) {
+			assert(gamepad2 == nullptr);
+			gamepad2 = SDL_GameControllerOpen(jid);
+			assert(gamepad2 != nullptr);
+			SDL_Joystick* joy = SDL_GameControllerGetJoystick(gamepad1);
+			PSGLOBAL(joy2id) = SDL_JoystickInstanceID(joy);	// needed to get right ID for remove event
+		}
 
 	} else if (event == SDL_JOYDEVICEREMOVED) {
 		if (PSGLOBAL(joy1id) == jid) {
+			assert(gamepad1 != nullptr);
+			SDL_GameControllerClose(gamepad1);
 			PSGLOBAL(joy1id) = -1;
-		} else if (PSGLOBAL(joy2id) == jid)
+			gamepad1 = nullptr;
+		} else if (PSGLOBAL(joy2id) == jid) {
+			assert(gamepad2 != nullptr);
+			SDL_GameControllerClose(gamepad2);
 			PSGLOBAL(joy2id) = -1;
+			gamepad2 = nullptr;
+		}
 	}
 }
 
