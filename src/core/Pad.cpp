@@ -1640,14 +1640,14 @@ void CPad::AffectFromXinput(uint32 pad)
 		float rx = (float)xstate.Gamepad.sThumbRX / (float)0x7FFF;
 		float ry = (float)xstate.Gamepad.sThumbRY / (float)0x7FFF;
 
-		if (Abs(lx) > 0.3f || Abs(ly) > 0.3f) {
-			PCTempJoyState.LeftStickX = (int32)(lx * 128.0f);
-			PCTempJoyState.LeftStickY = (int32)(-ly * 128.0f);
+		if (Abs(lx) > ControlsManager.m_lStickDeadzone || Abs(ly) > ControlsManager.m_lStickDeadzone) {
+			PCTempJoyState.LeftStickX = (int32)(lx * 128.0f * ControlsManager.m_lStickSensX);
+			PCTempJoyState.LeftStickY = (int32)(-ly * 128.0f * ControlsManager.m_lStickSensY);
 		}
 
-		if (Abs(rx) > 0.3f || Abs(ry) > 0.3f) {
-			PCTempJoyState.RightStickX = (int32)(rx * 128.0f);
-			PCTempJoyState.RightStickY = (int32)(-ry * 128.0f);
+		if (Abs(rx) > ControlsManager.m_rStickDeadzone || Abs(ry) > ControlsManager.m_rStickDeadzone) {
+			PCTempJoyState.RightStickX = (int32)(rx * 128.0f * ControlsManager.m_rStickSensX);
+			PCTempJoyState.RightStickY = (int32)(-ry * 128.0f * ControlsManager.m_rStickSensY);
 		}
 
 		XINPUT_VIBRATION VibrationState;

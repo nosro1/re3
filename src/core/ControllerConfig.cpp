@@ -23,6 +23,12 @@ CControllerConfigManager::CControllerConfigManager()
 {
 	m_bFirstCapture    = false;
 	m_bMouseAssociated = false;
+	m_lStickSensX = 1.0f;
+	m_lStickSensY = 1.0f;
+	m_rStickSensX = 1.0f;
+	m_rStickSensY = 1.0f;
+	m_lStickDeadzone = 0.3f;
+	m_rStickDeadzone = 0.3f;
 
 	MakeControllerActionsBlank();
 	InitDefaultControlConfiguration();
