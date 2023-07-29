@@ -139,6 +139,7 @@ public:
 	tControllerConfigBind m_aSettings[MAX_CONTROLLERACTIONS][MAX_CONTROLLERTYPES];
 	bool                  m_aSimCheckers[MAX_SIMS][MAX_CONTROLLERTYPES];
 	bool                  m_bMouseAssociated;
+	float                 m_lStickSens, m_rStickSens;
 
 #ifdef LOAD_INI_SETTINGS
 	static uint32 ms_padButtonsInited;

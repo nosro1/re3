@@ -366,6 +366,9 @@ void LoadINIControllerSettings()
 		ControlsManager.ms_padButtonsInited = cfg.get("Bindings").size() != 0 ? 16 : 0;
 	}
 
+	ReadIniIfExists("Controller", "LeftStickSens", &ControlsManager.m_lStickSens);
+	ReadIniIfExists("Controller", "RightStickSens", &ControlsManager.m_rStickSens);
+
 	for (int32 i = 0; i < MAX_CONTROLLERACTIONS; i++) {
 		char value[128];
 		if (ReadIniIfExists("Bindings", iniControllerActions[i], value, 128)) {
