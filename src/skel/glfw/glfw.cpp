@@ -2522,16 +2522,16 @@ void CapturePad(RwInt32 padID)
 		CPad *pad = CPad::GetPad(bs.padID);
 
 		if (Abs(leftStickPos.x)  > 0.3f)
-			pad->PCTempJoyState.LeftStickX	= (int32)(leftStickPos.x  * 128.0f * ControlsManager.m_lStickSens);
+			pad->PCTempJoyState.LeftStickX	= (int32)(leftStickPos.x  * 128.0f * ControlsManager.m_lStickSensX);
 
 		if (Abs(leftStickPos.y)  > 0.3f)
-			pad->PCTempJoyState.LeftStickY	= (int32)(leftStickPos.y  * 128.0f * ControlsManager.m_lStickSens);
+			pad->PCTempJoyState.LeftStickY	= (int32)(leftStickPos.y  * 128.0f * ControlsManager.m_lStickSensY);
 
 		if (Abs(rightStickPos.x) > 0.3f)
-			pad->PCTempJoyState.RightStickX = (int32)(rightStickPos.x * 128.0f * ControlsManager.m_rStickSens);
+			pad->PCTempJoyState.RightStickX = (int32)(rightStickPos.x * 128.0f * ControlsManager.m_rStickSensX);
 
 		if (Abs(rightStickPos.y) > 0.3f)
-			pad->PCTempJoyState.RightStickY = (int32)(rightStickPos.y * 128.0f * ControlsManager.m_rStickSens);
+			pad->PCTempJoyState.RightStickY = (int32)(rightStickPos.y * 128.0f * ControlsManager.m_rStickSensY);
 	}
 
 	_psHandleVibration();
