@@ -27,6 +27,8 @@ CControllerConfigManager::CControllerConfigManager()
 	m_lStickSensY = 1.0f;
 	m_rStickSensX = 1.0f;
 	m_rStickSensY = 1.0f;
+	m_lStickDeadzone = 0.3f;
+	m_rStickDeadzone = 0.3f;
 
 	MakeControllerActionsBlank();
 	InitDefaultControlConfiguration();

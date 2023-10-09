@@ -368,8 +368,10 @@ void LoadINIControllerSettings()
 
 	ReadIniIfExists("Controller", "LeftStickSensX", &ControlsManager.m_lStickSensX);
 	ReadIniIfExists("Controller", "LeftStickSensY", &ControlsManager.m_lStickSensY);
+	ReadIniIfExists("Controller", "LeftStickDeadzone", &ControlsManager.m_lStickDeadzone);
 	ReadIniIfExists("Controller", "RightStickSensX", &ControlsManager.m_rStickSensX);
 	ReadIniIfExists("Controller", "RightStickSensY", &ControlsManager.m_rStickSensY);
+	ReadIniIfExists("Controller", "RightStickDeadzone", &ControlsManager.m_rStickDeadzone);
 
 	for (int32 i = 0; i < MAX_CONTROLLERACTIONS; i++) {
 		char value[128];
