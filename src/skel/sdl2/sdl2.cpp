@@ -664,12 +664,12 @@ void _InputInitialiseJoys()
 	PSGLOBAL(joy1id) = -1;
 	PSGLOBAL(joy2id) = -1;
 
-	// Load our gamepad mappings.
-	const char* EnvControlConfig = getenv("SDL_GAMECONTROLLERCONFIG");
+	// Load our gamepad mappings
+	const char* EnvControlConfig = getenv("SDL_GAMECONTROLLERCONFIG_FILE");
 
 	if (EnvControlConfig != nil) {
 		if (SDL_GameControllerAddMappingsFromFile(EnvControlConfig) <= 0) {
-			Error("Could not load custom controller mapping (SDL_GAMECONTROLLERCONFIG env variable)");
+			Error("Could not load custom controller mapping (SDL_GAMECONTROLLERCONFIG_FILE env variable\n)");
 		}
 	} else {
 		const char* SDL_GAMEPAD_DB_PATH = "gamecontrollerdb.txt";
