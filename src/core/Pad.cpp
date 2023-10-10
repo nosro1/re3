@@ -864,8 +864,13 @@ CMouseControllerState CMousePointerStateHelper::GetMouseSetUp()
 	}
 #else
 	// It seems there is no way to get number of buttons on mouse, so assign all buttons if we have mouse.
+#ifdef LIBRW_SDL2
+	int xpos = 1, ypos;
+	SDL_GetMouseState(&xpos, &ypos);
+#else
 	double xpos = 1.0f, ypos;
 	glfwGetCursorPos(PSGLOBAL(window), &xpos, &ypos);
+#endif
 
 	if (xpos != 0.f) {
 		state.MMB = true;
@@ -924,8 +929,14 @@ void CPad::UpdateMouse()
 #else
 	if ( IsForegroundApp() && PSGLOBAL(cursorIsInWindow) )
 	{
+#ifdef LIBRW_SDL2
+		int xpos = 1, ypos;
+		int mouseState = SDL_GetMouseState(&xpos, &ypos);
+#else
 		double xpos = 1.0f, ypos;
 		glfwGetCursorPos(PSGLOBAL(window), &xpos, &ypos);
+#endif
+
 		if (xpos == 0.f)
 			return;
 
@@ -944,11 +955,19 @@ void CPad::UpdateMouse()
 
 		PCTempMouseControllerState.x = (float)(signX * (xpos - PSGLOBAL(lastMousePos.x)));
 		PCTempMouseControllerState.y = (float)(signy * (ypos - PSGLOBAL(lastMousePos.y)));
+#ifdef LIBRW_SDL2
+		PCTempMouseControllerState.LMB = !!(mouseState & SDL_BUTTON(1));
+		PCTempMouseControllerState.RMB = !!(mouseState & SDL_BUTTON(3));
+		PCTempMouseControllerState.MMB = !!(mouseState & SDL_BUTTON(2));
+		PCTempMouseControllerState.MXB1 = !!(mouseState & SDL_BUTTON(4));
+		PCTempMouseControllerState.MXB2 = !!(mouseState & SDL_BUTTON(5));
+#else
 		PCTempMouseControllerState.LMB = glfwGetMouseButton(PSGLOBAL(window), GLFW_MOUSE_BUTTON_LEFT);
 		PCTempMouseControllerState.RMB = glfwGetMouseButton(PSGLOBAL(window), GLFW_MOUSE_BUTTON_RIGHT);
 		PCTempMouseControllerState.MMB = glfwGetMouseButton(PSGLOBAL(window), GLFW_MOUSE_BUTTON_MIDDLE);
 		PCTempMouseControllerState.MXB1 = glfwGetMouseButton(PSGLOBAL(window), GLFW_MOUSE_BUTTON_4);
 		PCTempMouseControllerState.MXB2 = glfwGetMouseButton(PSGLOBAL(window), GLFW_MOUSE_BUTTON_5);
+#endif
 
 		if (PSGLOBAL(mouseWheel) > 0)
 			PCTempMouseControllerState.WHEELUP = 1;
