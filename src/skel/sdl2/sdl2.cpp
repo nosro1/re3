@@ -1773,7 +1773,6 @@ void CapturePad(RwInt32 padID)
 
 	SDL_Joystick* joy = SDL_GameControllerGetJoystick(gamepad);
 	int joyId = SDL_JoystickInstanceID(joy);
-	int numButtons = SDL_JoystickNumButtons(joy);
 	int numAxes = SDL_JoystickNumAxes(joy);
 
 	if (ControlsManager.m_bFirstCapture == false) {
@@ -1785,17 +1784,14 @@ void CapturePad(RwInt32 padID)
 	}
 
 	// Update buttons state
-	assert(numButtons <= ARRAY_SIZE(ControlsManager.m_NewState.buttons));
-	assert(numButtons <= ARRAY_SIZE(ControlsManager.m_NewState.mappedButtons));
-	assert(numButtons < SDL_CONTROLLER_BUTTON_MAX);
-
-	for (int i = 0; i < numButtons; ++i) {
+	for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
 		int state = SDL_GameControllerGetButton(gamepad, (SDL_GameControllerButton) i);
+		assert(state == 0 || state == 1);
 		ControlsManager.m_NewState.buttons[i] = state;
 		ControlsManager.m_NewState.mappedButtons[i] = !!state;
 	}
 
-	ControlsManager.m_NewState.numButtons = numButtons;
+	ControlsManager.m_NewState.numButtons = SDL_CONTROLLER_BUTTON_MAX - 1;
 	ControlsManager.m_NewState.id = joyId;
 	ControlsManager.m_NewState.isGamepad = true; // SDL_IsGameController(joyId);
 
@@ -1884,7 +1880,7 @@ void joysChangeCB(int jid, int event)
 			assert(gamepad2 == nullptr);
 			gamepad2 = SDL_GameControllerOpen(jid);
 			assert(gamepad2 != nullptr);
-			SDL_Joystick* joy = SDL_GameControllerGetJoystick(gamepad1);
+			SDL_Joystick* joy = SDL_GameControllerGetJoystick(gamepad2);
 			PSGLOBAL(joy2id) = SDL_JoystickInstanceID(joy);	// needed to get right ID for remove event
 		}
 
