@@ -53,6 +53,16 @@ void CControllerConfigManager::MakeControllerActionsBlank()
 int MapIdToButtonId(int mapId) {
 	switch (mapId) {
 #ifdef LIBRW_SDL2
+#ifdef REVC_SNES_PAD
+		case SDL_CONTROLLER_BUTTON_B: // Cross
+			return 2;
+		case SDL_CONTROLLER_BUTTON_A: // Circle
+			return 1;
+		case SDL_CONTROLLER_BUTTON_Y: // Square
+			return 3;
+		case SDL_CONTROLLER_BUTTON_X: // Triangle
+			return 4;
+#else // Xbox pad mapping
 		case SDL_CONTROLLER_BUTTON_A: // Cross
 			return 2;
 		case SDL_CONTROLLER_BUTTON_B: // Circle
@@ -61,6 +71,7 @@ int MapIdToButtonId(int mapId) {
 			return 3;
 		case SDL_CONTROLLER_BUTTON_Y: // Triangle
 			return 4;
+#endif
 		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
 			return 7;
 		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
@@ -87,6 +98,16 @@ int MapIdToButtonId(int mapId) {
 		case 16: // Right trigger
 			return 6;
 #else
+#ifdef REVC_SNES_PAD
+		case GLFW_GAMEPAD_BUTTON_B: // Cross
+			return 2;
+		case GLFW_GAMEPAD_BUTTON_A: // Circle
+			return 1;
+		case GLFW_GAMEPAD_BUTTON_Y: // Square
+			return 3;
+		case GLFW_GAMEPAD_BUTTON_X: // Triangle
+			return 4;
+#else // Xbox pad mapping
 		case GLFW_GAMEPAD_BUTTON_A: // Cross
 			return 2;
 		case GLFW_GAMEPAD_BUTTON_B: // Circle
@@ -95,6 +116,7 @@ int MapIdToButtonId(int mapId) {
 			return 3;
 		case GLFW_GAMEPAD_BUTTON_Y: // Triangle
 			return 4;
+#endif
 		case GLFW_GAMEPAD_BUTTON_LEFT_BUMPER:
 			return 7;
 		case GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER:
