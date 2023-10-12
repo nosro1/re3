@@ -33,6 +33,11 @@ option(${PROJECT}_INSTALL "Enable installation of ${EXECUTABLE} + gamefiles" OFF
 option(${PROJECT}_WITH_OPUS "Build ${EXECUTABLE} with opus support" OFF)
 option(${PROJECT}_WITH_LIBSNDFILE "Build ${EXECUTABLE} with libsndfile (instead of internal decoder)" OFF)
 
+option(${PROJECT}_SNES_PAD "Map game controller buttons to match SNES gamepad" OFF)
+if(${PROJECT}_SNES_PAD)
+	add_compile_definitions(${PROJECT}_SNES_PAD)
+endif()
+
 set_property(CACHE ${PROJECT}_AUDIO PROPERTY STRINGS ${${PROJECT}_AUDIOS})
 message(STATUS "${PROJECT}_AUDIO = ${${PROJECT}_AUDIO} (choices=${${PROJECT}_AUDIOS})")
 set("${PROJECT}_AUDIO_${${PROJECT}_AUDIO}" ON)
