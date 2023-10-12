@@ -774,11 +774,11 @@ HandlePadButtonUp(RsPadButtonStatus *padButtonStatus)
 	
 	ControlsManager.UpdateJoyButtonState(padNumber);
 	
-	for ( int32 i = 1; i < _TODOCONST(16); i++ )
+	for ( int32 i = 0; i < _TODOCONST(16); i++ )
 	{
 		RsPadButtons btn = rsPADNULL;
 		if ( ControlsManager.m_aButtonStates[i] == FALSE )
-			btn = (RsPadButtons)(i + 1); // bug ?, cycle begins from 1(not zero), 1+1==2==rsPADBUTTON2, so we skip rsPADBUTTON1, right ?
+			btn = (RsPadButtons)(i + 1);
 		
 		if ( FrontEndMenuManager.m_bMenuActive || bPadTwo || bCam )
 			ControlsManager.UpdateJoyInConfigMenus_ButtonUp(btn, padNumber);
