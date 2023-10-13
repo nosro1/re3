@@ -170,7 +170,7 @@ enum Config {
 #	define PS2_MENU
 #elif defined GTA_PC
 #	define EXTERNAL_3D_SOUND
-#	define AUDIO_REFLECTIONS
+//#	define AUDIO_REFLECTIONS
 #	ifndef GTA_HANDHELD
 #		define PC_PLAYER_CONTROLS	// mouse player/cam mode
 #	endif
@@ -212,7 +212,7 @@ enum Config {
 #define THIS_IS_STUPID
 #define PC_PARTICLE
 #define DONT_FIX_REPLAY_BUGS
-#define USE_TXD_CDIMAGE // generate and load textures from txd.img
+//#define USE_TXD_CDIMAGE // generate and load textures from txd.img
 //#define USE_TEXTURE_POOL // not possible because R* used custom RW33
 #else
 // This enables things from the PS2 version on PC
@@ -297,7 +297,7 @@ enum Config {
 #define ASPECT_RATIO_SCALE	// Not just makes everything scale with aspect ratio, also adds support for all aspect ratios
 #define PROPER_SCALING		// use original DEFAULT_SCREEN_WIDTH/DEFAULT_SCREEN_HEIGHT from PS2 instead of PC(R* changed HEIGHT here to make radar look better, but broke other hud elements aspect ratio).
 #define DEFAULT_NATIVE_RESOLUTION	// Set default video mode to your native resolution (fixes Windows 10 launch)
-#define USE_TXD_CDIMAGE		// generate and load textures from txd.img
+//#define USE_TXD_CDIMAGE		// generate and load textures from txd.img
 #define PS2_ALPHA_TEST		// emulate ps2 alpha test 
 #define IMPROVED_VIDEOMODE	// save and load videomode parameters instead of a magic number
 #define DISABLE_LOADING_SCREEN // disable the loading screen which vastly improves the loading time
@@ -306,7 +306,7 @@ enum Config {
 #undef RANDOMSPLASH
 #endif
 #define DISABLE_VSYNC_ON_TEXTURE_CONVERSION // make texture conversion work faster by disabling vsync
-#define ANISOTROPIC_FILTERING	// set all textures to max anisotropic filtering
+//#define ANISOTROPIC_FILTERING	// set all textures to max anisotropic filtering
 //#define USE_TEXTURE_POOL
 #ifdef LIBRW
 #define EXTENDED_COLOURFILTER		// more options for colour filter (replaces mblur)
@@ -429,7 +429,7 @@ enum Config {
 // Audio
 #define EXTERNAL_3D_SOUND // use external engine to simulate 3d audio spatialization. OpenAL would not work without it (because it works in a 3d space
                           // originally and making it work in 2d only requires more resource). Will not work on PS2
-#define AUDIO_REFLECTIONS // Enable audio reflections. Disabled on mobile, didn't exist yet on PS2.
+//#define AUDIO_REFLECTIONS // Enable audio reflections. Disabled on mobile, didn't exist yet on PS2.
 #define RADIO_SCROLL_TO_PREV_STATION
 #define AUDIO_CACHE
 #define PS2_AUDIO_CHANNELS // increases the maximum number of audio channels to PS2 value of 44 (PC has 28 originally)
@@ -460,7 +460,7 @@ enum Config {
 #endif
 #define BIG_IMG // Not complete - allows to read larger img files
 
-//#define SQUEEZE_PERFORMANCE
+#define SQUEEZE_PERFORMANCE
 #ifdef SQUEEZE_PERFORMANCE
 	#undef PS2_ALPHA_TEST
 	#undef NO_ISLAND_LOADING
