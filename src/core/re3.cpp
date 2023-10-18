@@ -472,6 +472,12 @@ void SaveINIControllerSettings()
 #endif
 #endif
 	StoreIni("Controller", "PadButtonsInited", ControlsManager.ms_padButtonsInited);
+	StoreIni("Controller", "LeftStickSensX", ControlsManager.m_lStickSensX);
+	StoreIni("Controller", "LeftStickSensY", ControlsManager.m_lStickSensY);
+	StoreIni("Controller", "LeftStickDeadzone", ControlsManager.m_lStickDeadzone);
+	StoreIni("Controller", "RightStickSensX", ControlsManager.m_rStickSensX);
+	StoreIni("Controller", "RightStickSensY", ControlsManager.m_rStickSensY);
+	StoreIni("Controller", "RightStickDeadzone", ControlsManager.m_rStickDeadzone);
 
 	ini.write(cfg);
 }
