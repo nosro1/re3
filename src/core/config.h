@@ -467,7 +467,7 @@ enum Config {
 	#undef PS2_AUDIO_CHANNELS
 	#undef EXTENDED_OFFSCREEN_DESPAWN_RANGE
 	#define PC_PARTICLE
-	#define VC_PED_PORTS // To not process collisions always. But should be tested if that's really beneficial
+	//#define VC_PED_PORTS // To not process collisions always. But should be tested if that's really beneficial
 	#define VC_RAIN_NERF // Reduces number of rain particles
 #endif
 
